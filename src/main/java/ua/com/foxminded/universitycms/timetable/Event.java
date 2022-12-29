@@ -8,6 +8,8 @@ import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,6 +20,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import ua.com.foxminded.universitycms.models.Course;
 import ua.com.foxminded.universitycms.models.Group;
 import ua.com.foxminded.universitycms.models.Teacher;
@@ -28,27 +32,33 @@ public class Event {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "EVENT_ID")
 	private Long id;
 
 	@Column(name = "EVENT_DATE")
+	@Temporal(TemporalType.DATE)
 	private LocalDate date;
 
 	@Column(name = "EVENT_TIME")
+	@Temporal(TemporalType.TIME)
 	private LocalTime time;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "course_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Course course;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "group_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Group group;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "teacher_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore
 	private Teacher teacher;
 	
 	@ManyToMany(mappedBy = "events")
@@ -68,13 +78,13 @@ public class Event {
 
 	}
 
-	public Long getId() {
+	public Long getEventId() {
 
 		return id;
 
 	}
 
-	public void setId(Long id) {
+	public void setEventId(Long id) {
 
 		this.id = id;
 

@@ -3,8 +3,6 @@ package ua.com.foxminded.universitycms.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.NaturalId;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +21,6 @@ public class Course {
 	private Long id;
 
 	@Column(name = "COURSE_NAME")
-	@NaturalId
 	private String courseName;
 
 	@Column(name = "COURSE_DESCRIPTION")

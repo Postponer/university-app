@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS groups
 CREATE TABLE IF NOT EXISTS students
 (
     student_id SERIAL,
-    group_id integer,
     first_name varchar(255) COLLATE pg_catalog."default" NOT NULL,
     last_name varchar(255) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT students_pkey PRIMARY KEY (student_id)
@@ -41,9 +40,6 @@ CREATE TABLE IF NOT EXISTS events
     event_id SERIAL,
     event_date date,
     event_time time,
-    course_id integer,
-    group_id integer,
-    teacher_id integer,
     CONSTRAINT eventss_pkey PRIMARY KEY (event_id)
 );
 

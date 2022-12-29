@@ -1,7 +1,9 @@
 package ua.com.foxminded.universitycms.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
+@MappedSuperclass
 public abstract class Person {
 
 	@Column(name = "FIRST_NAME")

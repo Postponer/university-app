@@ -24,7 +24,7 @@ public class CourseService {
 	public Course getByName(String courseName) {
 
 		logger.debug("Getting course by name: {}", courseName);
-		Course course = courseDao.getByName(courseName).orElse(null);
+		Course course = courseDao.getByCourseName(courseName).orElse(null);
 		logger.info("{} has been gotten by name: {}", course, courseName);
 
 		return course;
@@ -34,7 +34,7 @@ public class CourseService {
 	public Course getByDescription(String courseDescription) {
 
 		logger.debug("Getting course by description: {}", courseDescription);
-		Course course = courseDao.getByDescription(courseDescription).orElse(null);
+		Course course = courseDao.getByCourseDescription(courseDescription).orElse(null);
 		logger.info("{} has been gotten by description: {}", course, courseDescription);
 
 		return course;
@@ -76,12 +76,12 @@ public class CourseService {
 
 		logger.debug("Updating course with id: {} with this parameters: {}", courseId,
 				courseName + ", " + courseDescription);
-		courseDao.update(courseId, courseName, courseDescription);
-		Course course = courseDao.findById(courseId).orElse(null);
+		courseDao.save(new Course(courseId, courseName, courseDescription));
+		Course updatedCourse = courseDao.findById(courseId).orElse(null);
 		logger.info("Course with id: {} has been updated with this parameters: {}", courseId,
 				courseName + ", " + courseDescription);
 
-		return course;
+		return updatedCourse;
 
 	}
 

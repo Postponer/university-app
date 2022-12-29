@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+import ua.com.foxminded.universitycms.daolayer.CourseDao;
 import ua.com.foxminded.universitycms.daolayer.GroupDao;
 import ua.com.foxminded.universitycms.daolayer.StudentDao;
 import ua.com.foxminded.universitycms.models.Group;
@@ -17,23 +19,25 @@ public class StudentService {
 
 	private StudentDao studentDao;
 	private GroupDao groupDao;
+	private CourseDao courseDao;
 	private Scanner scanner = new Scanner(System.in);
 	Logger logger = LoggerFactory.getLogger(StudentService.class);
 
-	public StudentService(StudentDao studentDao, GroupDao groupDao) {
+	public StudentService(StudentDao studentDao, GroupDao groupDao, CourseDao courseDao) {
 
 		this.studentDao = studentDao;
 		this.groupDao = groupDao;
+		this.courseDao = courseDao;
 
 	}
 
-	public Student getByGroupId(int groupId) {
+	public List<Student> getByGroupId(Long groupId) {
 
-		logger.info("Getting student by group id: {}", groupId);
-		Student student = studentDao.getByGroupId(groupId).orElse(null);
-		logger.info("{} has been gotten by group id: {}", student, groupId);
+		logger.info("Getting students by group id: {}", groupId);
+		List<Student> students = studentDao.getByGroupId(groupId);
+		logger.info("{} has been gotten by group id: {}", students, groupId);
 
-		return student;
+		return students;
 
 	}
 
@@ -88,16 +92,16 @@ public class StudentService {
 
 	}
 
-	public Student update(Long studentId, int groupId, String firstName, String lastName) {
+	public Student update(Long studentId, Group group, String firstName, String lastName) {
 
 		logger.info("Updating student with id: {} with this parameters: {}", studentId,
-				groupId + ", " + firstName + ", " + lastName);
-		studentDao.update(studentId, groupId, firstName, lastName);
-		Student student = studentDao.findById(studentId).orElse(null);
+				group + ", " + firstName + ", " + lastName);
+		studentDao.save(new Student(studentId, group, firstName, lastName));
+		Student updatedStudent = studentDao.findById(studentId).orElse(null);
 		logger.info("Student with id: {} has been updated with this parameters: {}", studentId,
-				groupId + ", " + firstName + ", " + lastName);
+				group + ", " + firstName + ", " + lastName);
 
-		return student;
+		return updatedStudent;
 
 	}
 
@@ -130,21 +134,28 @@ public class StudentService {
 
 	}
 
-	public void addStudentToCourse(int studentId, int courseId) {
+	@Transactional
+	public void addStudentToCourse(Long studentId, Long courseId) {
 
 		logger.info("Adding student with id: {} to course with id {}", studentId, courseId);
-		studentDao.addStudentToCourse(studentId, courseId);
+		Student student = studentDao.findById(studentId).orElse(null);
+		student.addCourse(courseDao.findById(courseId).orElse(null));
+		studentDao.save(student);
 		logger.info("Student with id: {} has been added to course with id: {}", studentId, courseId);
 
 	}
 
-	public boolean removeStudentFromCourse(int studentId, int courseId) {
+	@Transactional
+	public boolean removeStudentFromCourse(Long studentId, Long courseId) {
 
 		logger.info("Removing student with id: {} from course with id: {}", studentId, courseId);
 
 		try {
 
-			studentDao.removeStudentFromCourse(studentId, courseId);
+			Student student = studentDao.findById(studentId).orElse(null);
+			student.removeCourse(courseDao.findById(courseId).orElse(null));
+			studentDao.save(student);
+
 			logger.info("Student with id: {} has been removed from course with id: {}", studentId, courseId);
 			return true;
 
@@ -226,10 +237,10 @@ public class StudentService {
 		try {
 
 			System.out.println("Please enter student_id: ");
-			int studentId = Integer.parseInt(scanner.nextLine());
+			Long studentId = Long.valueOf(scanner.nextLine());
 
 			System.out.println("Please enter course_id: ");
-			int courseId = Integer.parseInt(scanner.nextLine());
+			Long courseId = Long.valueOf(scanner.nextLine());
 
 			addStudentToCourse(studentId, courseId);
 			logger.info("Student with id: {} has been added to course with id: {} in console menu", studentId,
@@ -251,10 +262,10 @@ public class StudentService {
 		try {
 
 			System.out.println("Please enter student_id: ");
-			int studentId = Integer.parseInt(scanner.nextLine());
+			Long studentId = Long.valueOf(scanner.nextLine());
 
 			System.out.println("Please enter course_id: ");
-			int courseId = Integer.parseInt(scanner.nextLine());
+			Long courseId = Long.valueOf(scanner.nextLine());
 
 			removeStudentFromCourse(studentId, courseId);
 			logger.info("Student with id: {} has been removed from course with id: {} in console menu", studentId,

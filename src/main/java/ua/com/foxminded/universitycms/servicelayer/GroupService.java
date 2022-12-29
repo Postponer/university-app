@@ -26,7 +26,7 @@ public class GroupService {
 	public Group getByName(String groupName) {
 
 		logger.info("Getting group by name: {}", groupName);
-		Group group = groupDao.getByName(groupName).orElse(null);
+		Group group = groupDao.getByGroupName(groupName).orElse(null);
 		logger.info("{} has been gotten by name: {}", group, groupName);
 
 		return group;
@@ -67,11 +67,11 @@ public class GroupService {
 	public Group update(Long groupId, String groupName) {
 
 		logger.info("Updating group with id: {} with this parameter: {}", groupId, groupName);
-		groupDao.update(groupId, groupName);
-		Group group = groupDao.findById(groupId).orElse(null);
+		groupDao.save(new Group(groupId, groupName));
+		Group updatedGroup = groupDao.findById(groupId).orElse(null);
 		logger.info("Group with id: {} has been updated with this parameter: {}", groupId, groupName);
 
-		return group;
+		return updatedGroup;
 
 	}
 

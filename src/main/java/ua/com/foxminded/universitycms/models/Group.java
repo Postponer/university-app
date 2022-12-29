@@ -29,8 +29,9 @@ public class Group {
 	public Group() {
 	}
 
-	public Group(String groupName) {
+	public Group(Long id, String groupName) {
 
+		this.id = id;
 		this.groupName = groupName;
 
 	}
@@ -39,6 +40,12 @@ public class Group {
 
 		return id;
 
+	}
+
+	public void setGroupId(Long id) {
+		
+		this.id = id;
+		
 	}
 
 	public String getGroupName() {
@@ -56,6 +63,12 @@ public class Group {
 	public List<Teacher> getTeachers() {
 
 		return teachers;
+
+	}
+
+	public void setTeachers(List<Teacher> teachers) {
+
+		this.teachers = teachers;
 
 	}
 
