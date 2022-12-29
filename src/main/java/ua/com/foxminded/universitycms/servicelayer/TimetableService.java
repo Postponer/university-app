@@ -95,7 +95,7 @@ public class TimetableService {
 		try {
 
 			Timetable timetable = timetableDao.findById(timetableId).orElse(null);
-			timetable.addEvent(eventDao.findById(eventId).orElse(null));
+			timetable.removeEvent(eventDao.findById(eventId).orElse(null));
 			timetableDao.save(timetable);
 
 			logger.info("Timetable with id: {} has been removed from event with id: {}", timetableId, eventId);

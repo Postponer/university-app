@@ -71,7 +71,6 @@ class TimetableServiceTest {
 				"insert into events (event_date, event_time, course_id, group_id, teacher_id) values (?, ?, ?, ?, ?)",
 				LocalDate.now(), LocalTime.now(), 1, 1, 1);
 		jdbcTemplate.update("insert into timetables (timetable_id) values (?)", 1);
-		jdbcTemplate.update("insert into timetables_events (timetable_id, event_id) values (?, ?)", 1, 1);
 
 		timetableService.removeTimetableFromEvent(1L, 1L);
 		assertEquals(0, jdbcTemplate.queryForObject("select count(*) from timetables_events", Integer.class));
